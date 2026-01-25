@@ -1,0 +1,437 @@
+{
+  "info": {
+    "name": "MPESA Test Flow - Quick Start",
+    "description": "Simplified flow: Add Product → Cart → Checkout → M-Pesa Payment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "productId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "orderId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "paymentReference",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "totalAmount",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/actuator/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["actuator", "health"]
+        },
+        "description": "✅ Verify application is running"
+      },
+      "response": []
+    },
+    {
+      "name": "1. Add Product to DB",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200 || pm.response.code === 201) {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.data && jsonData.data.id) {",
+              "        pm.collectionVariables.set('productId', jsonData.data.id);",
+              "        console.log('✅ Product ID saved: ' + jsonData.data.id);",
+              "        console.log('💰 Product Price: ' + jsonData.data.price + ' KES');",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Classic T-Shirt\",\n  \"description\": \"Comfortable cotton t-shirt\",\n  \"price\": 1500,\n  \"category\": \"TOPS\",\n  \"brand\": \"Nike\",\n  \"size\": \"M\",\n  \"color\": \"Blue\",\n  \"gender\": \"UNISEX\",\n  \"stock\": 50,\n  \"imageUrl\": \"https://example.com/tshirt.jpg\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/admin/products",
+          "host": ["{{baseUrl}}"],
+          "path": ["admin", "products"]
+        },
+        "description": "📦 Create a product in database (Admin endpoint)"
+      },
+      "response": []
+    },
+    {
+      "name": "2. View Products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.data && jsonData.data.length > 0) {",
+              "        console.log('✅ Found ' + jsonData.data.length + ' products');",
+              "        jsonData.data.forEach((product, index) => {",
+              "            console.log(`Product ${index + 1}: ${product.name} - ${product.price} KES (Stock: ${product.stock})`);",
+              "        });",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products",
+          "host": ["{{baseUrl}}"],
+          "path": ["products"]
+        },
+        "description": "👀 Browse available products"
+      },
+      "response": []
+    },
+    {
+      "name": "3. Add to Cart",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200 || pm.response.code === 201) {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.data) {",
+              "        console.log('✅ Added to cart:');",
+              "        console.log('   Product: ' + jsonData.data.productName);",
+              "        console.log('   Quantity: ' + jsonData.data.quantity);",
+              "        console.log('   Price: ' + jsonData.data.price + ' KES');",
+              "        console.log('   Subtotal: ' + jsonData.data.subtotal + ' KES');",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": {{productId}},\n  \"quantity\": 2\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cart/{{userId}}/items",
+          "host": ["{{baseUrl}}"],
+          "path": ["cart", "{{userId}}", "items"]
+        },
+        "description": "🛒 Add product to shopping cart (qty: 2)"
+      },
+      "response": []
+    },
+    {
+      "name": "4. View Cart",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.data) {",
+              "        pm.collectionVariables.set('totalAmount', jsonData.data.totalAmount);",
+              "        console.log('🛒 Cart Summary:');",
+              "        console.log('   Items: ' + jsonData.data.itemCount);",
+              "        console.log('   Total: ' + jsonData.data.totalAmount + ' KES');",
+              "        console.log('');",
+              "        jsonData.data.items.forEach((item, index) => {",
+              "            console.log(`   ${index + 1}. ${item.productName} x${item.quantity} = ${item.subtotal} KES`);",
+              "        });",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cart/{{userId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["cart", "{{userId}}"]
+        },
+        "description": "👀 View cart contents and total"
+      },
+      "response": []
+    },
+    {
+      "name": "5. Create Order (Checkout)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200 || pm.response.code === 201) {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.data) {",
+              "        pm.collectionVariables.set('orderId', jsonData.data.id);",
+              "        pm.collectionVariables.set('totalAmount', jsonData.data.totalAmount);",
+              "        console.log('✅ Order Created:');",
+              "        console.log('   Order ID: ' + jsonData.data.id);",
+              "        console.log('   Order Number: ' + jsonData.data.orderNumber);",
+              "        console.log('   Total: ' + jsonData.data.totalAmount + ' KES');",
+              "        console.log('   Status: ' + jsonData.data.paymentStatus);",
+              "        console.log('');",
+              "        console.log('📋 Next: Initialize payment with amount ' + jsonData.data.totalAmount);",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": {{userId}},\n  \"shippingAddress\": \"123 Main Street, Nairobi, Kenya\",\n  \"paymentMethod\": \"PAYSTACK\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/checkout",
+          "host": ["{{baseUrl}}"],
+          "path": ["checkout"]
+        },
+        "description": "📦 Create order from cart items"
+      },
+      "response": []
+    },
+    {
+      "name": "6. Initialize M-Pesa Payment",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.data) {",
+              "        pm.collectionVariables.set('paymentReference', jsonData.data.paymentIntentId);",
+              "        console.log('💳 Payment Initialized:');",
+              "        console.log('   Reference: ' + jsonData.data.paymentIntentId);",
+              "        console.log('   Status: ' + jsonData.data.status);",
+              "        console.log('');",
+              "        console.log('🌐 Authorization URL:');",
+              "        console.log('   ' + jsonData.data.authorizationUrl);",
+              "        console.log('');",
+              "        console.log('📱 NEXT STEPS:');",
+              "        console.log('   1. Copy the URL above');",
+              "        console.log('   2. Open it in your browser');",
+              "        console.log('   3. Select \"Mobile Money\" or \"M-Pesa\"');",
+              "        console.log('   4. Enter phone: +254708374149 (test)');",
+              "        console.log('   5. Complete payment on your phone');",
+              "        console.log('   6. Return here and run \"Verify Payment\"');",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": {{totalAmount}},\n  \"currency\": \"KES\",\n  \"email\": \"customer@example.com\",\n  \"description\": \"Order payment\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/checkout/payment-intent",
+          "host": ["{{baseUrl}}"],
+          "path": ["checkout", "payment-intent"]
+        },
+        "description": "💰 Initialize Paystack payment - Get M-Pesa payment URL"
+      },
+      "response": []
+    },
+    {
+      "name": "7. Verify Payment",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.data === true) {",
+              "        console.log('✅ Payment Verified Successfully!');",
+              "        console.log('');",
+              "        console.log('📋 Next: Run \"Confirm Order Payment\" to complete the order');",
+              "    } else {",
+              "        console.log('❌ Payment verification failed');",
+              "        console.log('   Please check payment status in browser or try again');",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/checkout/verify-payment?reference={{paymentReference}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["checkout", "verify-payment"],
+          "query": [
+            {
+              "key": "reference",
+              "value": "{{paymentReference}}"
+            }
+          ]
+        },
+        "description": "✅ Verify payment was successful (run AFTER completing payment in browser)"
+      },
+      "response": []
+    },
+    {
+      "name": "8. Confirm Order Payment",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.data) {",
+              "        console.log('🎉 Order Payment Confirmed!');",
+              "        console.log('');",
+              "        console.log('📦 Order Details:');",
+              "        console.log('   Order Number: ' + jsonData.data.orderNumber);",
+              "        console.log('   Payment Status: ' + jsonData.data.paymentStatus);",
+              "        console.log('   Order Status: ' + jsonData.data.orderStatus);",
+              "        console.log('   Payment Reference: ' + jsonData.data.paymentReference);",
+              "        console.log('   Total: ' + jsonData.data.totalAmount + ' KES');",
+              "        console.log('');",
+              "        console.log('✅ Testing Complete! Check \"View Order Details\" for final verification');",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/checkout/confirm-payment/{{orderId}}?reference={{paymentReference}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["checkout", "confirm-payment", "{{orderId}}"],
+          "query": [
+            {
+              "key": "reference",
+              "value": "{{paymentReference}}"
+            }
+          ]
+        },
+        "description": "🎉 Update order status to COMPLETED"
+      },
+      "response": []
+    },
+    {
+      "name": "9. View Order Details",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    var jsonData = pm.response.json();",
+              "    console.log('📋 Complete Order Information:');",
+              "    console.log('   Order Number: ' + jsonData.orderNumber);",
+              "    console.log('   Payment Status: ' + jsonData.paymentStatus);",
+              "    console.log('   Order Status: ' + jsonData.orderStatus);",
+              "    console.log('   Payment Method: ' + jsonData.paymentMethod);",
+              "    console.log('   Payment Reference: ' + jsonData.paymentReference);",
+              "    console.log('   Total: ' + jsonData.totalAmount + ' KES');",
+              "    console.log('   Shipping: ' + jsonData.shippingAddress);",
+              "    console.log('');",
+              "    console.log('📦 Order Items:');",
+              "    jsonData.items.forEach((item, index) => {",
+              "        console.log(`   ${index + 1}. ${item.productName} x${item.quantity} = ${item.subtotal} KES`);",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/orders/{{orderId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["orders", "{{orderId}}"]
+        },
+        "description": "📋 View complete order with payment details"
+      },
+      "response": []
+    }
+  ]
+}

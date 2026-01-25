@@ -1,0 +1,451 @@
+{
+  "info": {
+    "name": "E-Commerce Customer Journey - MPESA",
+    "description": "Complete customer journey: Browse → Cart → Checkout with MPESA payment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "productId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "cartItemId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "orderId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "paymentReference",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Browse Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.length > 0) {",
+                  "        pm.collectionVariables.set('productId', jsonData.data[0].id);",
+                  "        console.log('Product ID saved: ' + jsonData.data[0].id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
+            },
+            "description": "Browse all available products"
+          },
+          "response": []
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/search?keyword=shirt",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "search"],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "shirt"
+                }
+              ]
+            },
+            "description": "Search products by keyword"
+          },
+          "response": []
+        },
+        {
+          "name": "Filter Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/filter?category=TOPS&minPrice=1000&maxPrice=5000",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "filter"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "TOPS"
+                },
+                {
+                  "key": "minPrice",
+                  "value": "1000"
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "5000"
+                }
+              ]
+            },
+            "description": "Filter products by criteria"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "{{productId}}"]
+            },
+            "description": "View detailed product information"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Shopping Cart",
+      "item": [
+        {
+          "name": "Add Product to Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.id) {",
+                  "        pm.collectionVariables.set('cartItemId', jsonData.data.id);",
+                  "        console.log('Cart Item ID saved: ' + jsonData.data.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/{{userId}}/items",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "{{userId}}", "items"]
+            },
+            "description": "Add a product to shopping cart"
+          },
+          "response": []
+        },
+        {
+          "name": "View Cart",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "{{userId}}"]
+            },
+            "description": "View cart contents and total"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/{{userId}}/items/{{cartItemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "{{userId}}", "items", "{{cartItemId}}"]
+            },
+            "description": "Update quantity of item in cart"
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Item from Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/{{userId}}/items/{{cartItemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "{{userId}}", "items", "{{cartItemId}}"]
+            },
+            "description": "Remove item from cart"
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "{{userId}}"]
+            },
+            "description": "Clear all items from cart"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Checkout & Payment",
+      "item": [
+        {
+          "name": "Create Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.id) {",
+                  "        pm.collectionVariables.set('orderId', jsonData.data.id);",
+                  "        console.log('Order ID saved: ' + jsonData.data.id);",
+                  "        console.log('Order Number: ' + jsonData.data.orderNumber);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"shippingAddress\": \"123 Main Street, Nairobi, Kenya\",\n  \"paymentMethod\": \"PAYSTACK\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["checkout"]
+            },
+            "description": "Create order from cart items"
+          },
+          "response": []
+        },
+        {
+          "name": "Initialize Payment (MPESA)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.paymentIntentId) {",
+                  "        pm.collectionVariables.set('paymentReference', jsonData.data.paymentIntentId);",
+                  "        console.log('Payment Reference saved: ' + jsonData.data.paymentIntentId);",
+                  "        console.log('Authorization URL: ' + jsonData.data.authorizationUrl);",
+                  "        console.log('Open this URL in browser to complete payment');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 6500,\n  \"currency\": \"KES\",\n  \"email\": \"customer@example.com\",\n  \"description\": \"Order payment\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/checkout/payment-intent",
+              "host": ["{{baseUrl}}"],
+              "path": ["checkout", "payment-intent"]
+            },
+            "description": "Initialize Paystack payment - Returns authorization URL for MPESA/Card payment"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/checkout/verify-payment?reference={{paymentReference}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["checkout", "verify-payment"],
+              "query": [
+                {
+                  "key": "reference",
+                  "value": "{{paymentReference}}"
+                }
+              ]
+            },
+            "description": "Verify payment status after completion"
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm Order Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/checkout/confirm-payment/{{orderId}}?reference={{paymentReference}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["checkout", "confirm-payment", "{{orderId}}"],
+              "query": [
+                {
+                  "key": "reference",
+                  "value": "{{paymentReference}}"
+                }
+              ]
+            },
+            "description": "Update order status after successful payment"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Order Management",
+      "item": [
+        {
+          "name": "Get Order Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}"]
+            },
+            "description": "View complete order details"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/user/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "user", "{{userId}}"]
+            },
+            "description": "Get all orders for a user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order by Number",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/number/ORD-2026-0001",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "number", "ORD-2026-0001"]
+            },
+            "description": "Find order by order number"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Health Check",
+      "item": [
+        {
+          "name": "Application Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/actuator/health",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["actuator", "health"]
+            },
+            "description": "Check if application is running"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
+
