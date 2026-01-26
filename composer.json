@@ -1,0 +1,13 @@
+{
+    "name": "clothes-shop/frontend",
+    "description": "Clothes Shop Frontend - PHP Application",
+    "type": "project",
+    "require": {
+        "php": ">=8.1"
+    },
+    "config": {
+        "platform": {
+            "php": "8.1"
+        }
+    }
+}
