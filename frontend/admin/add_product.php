@@ -1,4 +1,5 @@
 <?php
+session_start();
 $pageTitle = 'Add Product';
 include '../includes/header.php';
 ?>
@@ -78,7 +79,13 @@ include '../includes/header.php';
                 <div class="mb-3">
                     <label class="form-label">Image URL</label>
                     <input type="url" class="form-control" name="imageUrl"
-                           placeholder="https://example.com/image.jpg">
+                           placeholder="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500">
+                    <div class="form-text">
+                        💡 <strong>Need image URLs?</strong>
+                        <br>• Use <a href="https://unsplash.com" target="_blank">Unsplash</a> (Search → Right-click image → Copy image address)
+                        <br>• Use <a href="https://imgbb.com" target="_blank">ImgBB</a> (Upload → Copy direct link)
+                        <br>• See <code>IMAGE_URL_GUIDE.md</code> for more options and ready-to-use URLs
+                    </div>
                 </div>
 
                 <div class="mb-3">

@@ -1,4 +1,5 @@
 <?php
+session_start();
 $pageTitle = 'Checkout';
 include 'includes/header.php';
 

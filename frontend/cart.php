@@ -1,4 +1,5 @@
 <?php
+session_start();
 $pageTitle = 'Shopping Cart';
 include 'includes/header.php';
 

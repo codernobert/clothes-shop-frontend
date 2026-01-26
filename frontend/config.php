@@ -1,11 +1,7 @@
 <?php
 // API Configuration
+// Note: session_start() should be called by each page BEFORE including header.php
 define('API_BASE_URL', 'http://localhost:8080/api');
-
-// Session Configuration
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 // Helper function to make API requests
 function makeApiRequest($endpoint, $method = 'GET', $data = null) {
@@ -34,8 +30,15 @@ function makeApiRequest($endpoint, $method = 'GET', $data = null) {
     }
 
     // Parse HTTP response code from headers
-    if (isset($http_response_header)) {
-        preg_match('/HTTP\/\d\.\d\s+(\d+)/', $http_response_header[0], $matches);
+    // Handle $http_response_header for PHP 8.4+ compatibility
+    if (PHP_VERSION_ID >= 80400 && function_exists('http_get_last_response_headers')) {
+        $responseHeaders = http_get_last_response_headers();
+    } else {
+        $responseHeaders = $http_response_header ?? null;
+    }
+
+    if (isset($responseHeaders) && !empty($responseHeaders)) {
+        preg_match('/HTTP\/\d\.\d\s+(\d+)/', $responseHeaders[0], $matches);
         $httpCode = isset($matches[1]) ? (int)$matches[1] : 0;
 
         if ($httpCode >= 200 && $httpCode < 300) {

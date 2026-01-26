@@ -1,4 +1,5 @@
 <?php
+session_start();
 include 'includes/header.php';
 
 $productId = $_GET['id'] ?? null;

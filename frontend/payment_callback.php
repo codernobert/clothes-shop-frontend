@@ -1,4 +1,5 @@
 <?php
+session_start();
 $pageTitle = 'Payment Processing';
 include 'includes/header.php';
 

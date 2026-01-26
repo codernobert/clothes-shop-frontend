@@ -1,4 +1,5 @@
 <?php
+session_start();
 $pageTitle = 'Manage Orders';
 include '../includes/header.php';
 

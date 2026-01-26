@@ -1,4 +1,5 @@
 <?php
+session_start();
 $pageTitle = 'Home';
 include 'includes/header.php';
 
