@@ -1,7 +1,10 @@
 <?php
 // API Configuration
 // Note: session_start() should be called by each page BEFORE including header.php
-define('API_BASE_URL', 'http://localhost:8080/api');
+
+// Use environment variable if available, otherwise default to localhost
+$apiBaseUrl = getenv('API_BASE_URL') ?: 'http://localhost:8080/api';
+define('API_BASE_URL', $apiBaseUrl);
 
 // Helper function to make API requests
 function makeApiRequest($endpoint, $method = 'GET', $data = null) {
