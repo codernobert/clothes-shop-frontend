@@ -163,17 +163,50 @@ if (basename(dirname($_SERVER['SCRIPT_FILENAME'])) !== 'frontend') {
                     </li>
                 </ul>
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $basePath; ?>cart.php">
-                            <i class="fas fa-shopping-cart me-1"></i>Cart
-                            <span class="cart-badge" id="cartCount">0</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $basePath; ?>admin/index.php">
-                            <i class="fas fa-user-shield me-1"></i>Admin
-                        </a>
-                    </li>
+                    <?php if (isAuthenticated()):
+                        $user = getCurrentUser();
+                    ?>
+                        <!-- Authenticated User Menu -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?php echo $basePath; ?>cart.php">
+                                <i class="fas fa-shopping-cart me-1"></i>Cart
+                                <span class="cart-badge" id="cartCount">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i>
+                                <?php echo htmlspecialchars($user['firstName'] ?? 'User'); ?>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="<?php echo $basePath; ?>orders.php">
+                                    <i class="fas fa-box me-2"></i>My Orders
+                                </a></li>
+                                <?php if ($user['role'] === 'ADMIN'): ?>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="<?php echo $basePath; ?>admin/index.php">
+                                    <i class="fas fa-user-shield me-2"></i>Admin Panel
+                                </a></li>
+                                <?php endif; ?>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="<?php echo $basePath; ?>logout.php">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                    <?php else: ?>
+                        <!-- Guest User Menu -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?php echo $basePath; ?>login.php">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?php echo $basePath; ?>register.php">
+                                <i class="fas fa-user-plus me-1"></i>Register
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
