@@ -1,17 +1,27 @@
 <?php
 session_start();
+require_once 'config.php';
+
 $pageTitle = 'Home';
 include 'includes/header.php';
 
 // Fetch featured products
 $products = makeApiRequest('/products');
 $featuredProducts = array_slice($products ?? [], 0, 8);
+
+// Get current user if logged in
+$user = getCurrentUser();
 ?>
 
 <div class="hero-section text-center">
     <div class="container">
-        <h1 class="display-4 fw-bold mb-3">Welcome to Clothes Shop</h1>
-        <p class="lead mb-4">Discover the latest trends in fashion</p>
+        <?php if ($user): ?>
+            <h1 class="display-4 fw-bold mb-3">Welcome back, <?php echo htmlspecialchars($user['firstName']); ?>! 👋</h1>
+            <p class="lead mb-4">Discover the latest trends in fashion</p>
+        <?php else: ?>
+            <h1 class="display-4 fw-bold mb-3">Welcome to Clothes Shop</h1>
+            <p class="lead mb-4">Discover the latest trends in fashion</p>
+        <?php endif; ?>
         <a href="products.php" class="btn btn-light btn-lg">
             <i class="fas fa-shopping-bag me-2"></i>Shop Now
         </a>

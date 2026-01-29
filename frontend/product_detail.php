@@ -1,7 +1,8 @@
 <?php
 session_start();
-include 'includes/header.php';
+require_once 'config.php';
 
+// Check and fetch product BEFORE including header
 $productId = $_GET['id'] ?? null;
 
 if (!$productId) {
@@ -17,7 +18,9 @@ if (!$product) {
     exit;
 }
 
+// Set page title and NOW include header
 $pageTitle = $product['name'];
+include 'includes/header.php';
 ?>
 
 <div class="container mt-4">
@@ -131,9 +134,16 @@ document.getElementById('addToCartForm').addEventListener('submit', function(e) 
 
     const quantity = document.getElementById('quantity').value;
     const productId = <?php echo $productId; ?>;
-    const userId = <?php echo getUserId(); ?>;
+    const userId = <?php echo getUserId() ?? 'null'; ?>;
 
     const messageDiv = document.getElementById('message');
+
+    // Check if user is logged in
+    if (!userId) {
+        // Not logged in - redirect to login page
+        window.location.href = 'login.php?redirect=product_detail.php?id=<?php echo $productId; ?>';
+        return;
+    }
 
     fetch('ajax/add_to_cart.php', {
         method: 'POST',
@@ -148,6 +158,12 @@ document.getElementById('addToCartForm').addEventListener('submit', function(e) 
     })
     .then(response => response.json())
     .then(data => {
+        // Check if authentication is required
+        if (data.redirect) {
+            window.location.href = data.redirect;
+            return;
+        }
+
         if (data.success) {
             messageDiv.className = 'alert alert-success';
             messageDiv.textContent = 'Product added to cart successfully!';

@@ -1,10 +1,15 @@
 <?php
 session_start();
+require_once 'config.php';
+
+// Require authentication
+requireAuth();
+
 $pageTitle = 'My Orders';
 include 'includes/header.php';
 
 $userId = getUserId();
-$orders = makeApiRequest('/orders/user/' . $userId);
+$orders = makeApiRequest('/orders/user/' . $userId, 'GET', null, true);
 ?>
 
 <div class="container mt-4">

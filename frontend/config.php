@@ -6,14 +6,26 @@
 $apiBaseUrl = getenv('API_BASE_URL') ?: 'http://localhost:8080/api';
 define('API_BASE_URL', $apiBaseUrl);
 
-// Helper function to make API requests
-function makeApiRequest($endpoint, $method = 'GET', $data = null) {
+// Helper function to make API requests with JWT authentication
+function makeApiRequest($endpoint, $method = 'GET', $data = null, $requireAuth = false) {
     $url = API_BASE_URL . $endpoint;
+
+    $headers = "Content-Type: application/json\r\n";
+
+    // Add JWT token if required or available
+    if ($requireAuth || isset($_SESSION['access_token'])) {
+        $token = $_SESSION['access_token'] ?? null;
+        if ($token) {
+            $headers .= "Authorization: Bearer $token\r\n";
+        } elseif ($requireAuth) {
+            return ['error' => 'Authentication required', 'redirect' => 'login.php'];
+        }
+    }
 
     $options = [
         'http' => [
             'method' => $method,
-            'header' => "Content-Type: application/json\r\n",
+            'header' => $headers,
             'ignore_errors' => true,
             'timeout' => 30
         ]
@@ -33,7 +45,6 @@ function makeApiRequest($endpoint, $method = 'GET', $data = null) {
     }
 
     // Parse HTTP response code from headers
-    // Handle $http_response_header for PHP 8.4+ compatibility
     if (PHP_VERSION_ID >= 80400 && function_exists('http_get_last_response_headers')) {
         $responseHeaders = http_get_last_response_headers();
     } else {
@@ -44,6 +55,13 @@ function makeApiRequest($endpoint, $method = 'GET', $data = null) {
         preg_match('/HTTP\/\d\.\d\s+(\d+)/', $responseHeaders[0], $matches);
         $httpCode = isset($matches[1]) ? (int)$matches[1] : 0;
 
+        // Handle 401 Unauthorized
+        if ($httpCode === 401 && $requireAuth) {
+            // Clear session and redirect to login
+            session_destroy();
+            return ['error' => 'Session expired', 'redirect' => 'login.php'];
+        }
+
         if ($httpCode >= 200 && $httpCode < 300) {
             return json_decode($response, true);
         }
@@ -52,18 +70,52 @@ function makeApiRequest($endpoint, $method = 'GET', $data = null) {
     return null;
 }
 
-// Get or create user session
+// Check if user is authenticated
+function isAuthenticated() {
+    return isset($_SESSION['access_token']) && isset($_SESSION['user']);
+}
+
+// Get current user from session
+function getCurrentUser() {
+    return $_SESSION['user'] ?? null;
+}
+
+// Get user ID from session
 function getUserId() {
-    if (!isset($_SESSION['user_id'])) {
-        // For demo purposes, create a default user ID
-        // In production, this should be from authentication
-        $_SESSION['user_id'] = 1;
+    $user = getCurrentUser();
+    return $user['userId'] ?? null;
+}
+
+// Require authentication (redirect if not logged in)
+function requireAuth() {
+    if (!isAuthenticated()) {
+        header('Location: login.php');
+        exit;
     }
-    return $_SESSION['user_id'];
+}
+
+// Login user and store tokens
+function loginUser($authResponse) {
+    $_SESSION['access_token'] = $authResponse['accessToken'];
+    $_SESSION['refresh_token'] = $authResponse['refreshToken'];
+    $_SESSION['user'] = [
+        'userId' => $authResponse['userId'],
+        'email' => $authResponse['email'],
+        'firstName' => $authResponse['firstName'],
+        'lastName' => $authResponse['lastName'],
+        'role' => $authResponse['role']
+    ];
+}
+
+// Logout user
+function logoutUser() {
+    session_destroy();
+    header('Location: login.php');
+    exit;
 }
 
 // Format currency
 function formatCurrency($amount) {
-    return 'KSh ' . number_format($amount, 2);
+    return '$' . number_format($amount, 2);
 }
 ?>

@@ -1,7 +1,18 @@
 <?php
+session_start();
 require_once '../config.php';
 
 header('Content-Type: application/json');
+
+// Check authentication
+if (!isAuthenticated()) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Authentication required',
+        'redirect' => '../login.php'
+    ]);
+    exit;
+}
 
 $input = json_decode(file_get_contents('php://input'), true);
 
@@ -15,7 +26,7 @@ $data = [
     'quantity' => $input['quantity']
 ];
 
-$response = makeApiRequest('/cart/' . $input['userId'] . '/items', 'POST', $data);
+$response = makeApiRequest('/cart/' . $input['userId'] . '/items', 'POST', $data, true);
 
 if ($response && isset($response['success']) && $response['success']) {
     echo json_encode([

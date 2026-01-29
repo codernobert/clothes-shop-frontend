@@ -1,10 +1,15 @@
 <?php
 session_start();
+require_once 'config.php';
+
+// Require authentication
+requireAuth();
+
 $pageTitle = 'Shopping Cart';
 include 'includes/header.php';
 
 $userId = getUserId();
-$response = makeApiRequest('/cart/' . $userId);
+$response = makeApiRequest('/cart/' . $userId, 'GET', null, true);
 $cart = $response['data'] ?? null;
 ?>
 

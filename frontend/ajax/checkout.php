@@ -1,6 +1,18 @@
 <?php
+session_start();
 require_once '../config.php';
+
 header('Content-Type: application/json');
+
+// Check authentication
+if (!isAuthenticated()) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Authentication required',
+        'redirect' => '../login.php'
+    ]);
+    exit;
+}
 
 $input = json_decode(file_get_contents('php://input'), true);
 
@@ -9,7 +21,8 @@ if (!isset($input['userId']) || !isset($input['shippingAddress']) || !isset($inp
     exit;
 }
 
-$response = makeApiRequest('/checkout', 'POST', $input);
+// Make API request with authentication
+$response = makeApiRequest('/checkout', 'POST', $input, true);
 
 if ($response && isset($response['success']) && $response['success']) {
     echo json_encode([

@@ -1,6 +1,18 @@
 <?php
+session_start();
 require_once '../config.php';
+
 header('Content-Type: application/json');
+
+// Check authentication
+if (!isAuthenticated()) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Authentication required',
+        'redirect' => '../login.php'
+    ]);
+    exit;
+}
 
 $reference = $_GET['reference'] ?? null;
 
@@ -9,7 +21,8 @@ if (!$reference) {
     exit;
 }
 
-$response = makeApiRequest('/checkout/verify-payment?reference=' . urlencode($reference), 'POST');
+// Make API request with authentication
+$response = makeApiRequest('/checkout/verify-payment?reference=' . urlencode($reference), 'POST', null, true);
 
 if ($response && isset($response['success']) && $response['success']) {
     echo json_encode([
