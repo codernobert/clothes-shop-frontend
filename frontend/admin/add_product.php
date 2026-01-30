@@ -1,5 +1,8 @@
 <?php
 session_start();
+require_once '../config.php';
+requireAdminAuth();
+
 $pageTitle = 'Add Product';
 include '../includes/header.php';
 ?>

@@ -86,10 +86,29 @@ function getUserId() {
     return $user['userId'] ?? null;
 }
 
+// Check if user has admin role
+function isAdmin() {
+    $user = getCurrentUser();
+    return isset($user['role']) && $user['role'] === 'ADMIN';
+}
+
 // Require authentication (redirect if not logged in)
 function requireAuth() {
     if (!isAuthenticated()) {
         header('Location: login.php');
+        exit;
+    }
+}
+
+// Require admin authentication (redirect if not logged in or not admin)
+function requireAdminAuth() {
+    if (!isAuthenticated()) {
+        header('Location: ../login.php');
+        exit;
+    }
+
+    if (!isAdmin()) {
+        header('Location: ../index.php');
         exit;
     }
 }

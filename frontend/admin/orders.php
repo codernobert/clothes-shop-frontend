@@ -1,5 +1,8 @@
 <?php
 session_start();
+require_once '../config.php';
+requireAdminAuth();
+
 $pageTitle = 'Manage Orders';
 include '../includes/header.php';
 

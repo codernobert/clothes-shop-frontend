@@ -1,5 +1,8 @@
 <?php
 session_start();
+require_once '../config.php';
+requireAdminAuth();
+
 $pageTitle = 'Admin Dashboard';
 include '../includes/header.php';
 
