@@ -28,6 +28,69 @@ $user = getCurrentUser();
     </div>
 </div>
 
+<!-- Portfolio Demo Section for Interviewers -->
+<div class="bg-light py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <p class="text-muted mb-4">
+                    Explore both the <strong>customer experience</strong> and the <strong>admin dashboard</strong> to see the complete application in action.
+                </p>
+                <div class="card border-primary mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <i class="fas fa-lock me-2"></i>Admin Dashboard Demo Credentials
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2">
+                            <strong>Email:</strong>
+                            <code class="bg-light p-2 rounded">admin@clothesshop.com</code>
+                        </p>
+                        <p class="mb-3">
+                            <strong>Password:</strong>
+                            <code class="bg-light p-2 rounded">password123</code>
+                        </p>
+                        <p class="text-muted small mb-0">
+                            <i class="fas fa-info-circle me-1"></i>Use these credentials to access the admin panel and explore product management, order management, and dashboard features.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-users fa-2x text-success mb-3"></i>
+                                <h5>Customer Experience</h5>
+                                <p class="text-muted small">Browse products, manage cart, and place orders</p>
+                                <a href="products.php" class="btn btn-success btn-sm">
+                                    <i class="fas fa-shopping-bag me-1"></i>Shop
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-user-tie fa-2x text-info mb-3"></i>
+                                <h5>Admin Dashboard</h5>
+                                <p class="text-muted small">Manage products, orders, and view analytics</p>
+                                <a href="login.php?redirect=admin/index.php" class="btn btn-info btn-sm">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Admin Login
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-info mt-4 mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    <strong>Pro Tip:</strong> Login with the demo admin credentials above, then navigate to the admin dashboard to see advanced features!
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <!-- Categories Section -->
     <div class="row mb-5">
