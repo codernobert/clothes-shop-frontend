@@ -103,12 +103,12 @@ function requireAuth() {
 // Require admin authentication (redirect if not logged in or not admin)
 function requireAdminAuth() {
     if (!isAuthenticated()) {
-        header('Location: ../login.php');
+        header('Location: ../admin/login.php');
         exit;
     }
 
     if (!isAdmin()) {
-        header('Location: ../index.php');
+        header('Location: ../admin/login.php');
         exit;
     }
 }
