@@ -12,7 +12,12 @@ if (basename(dirname($_SERVER['SCRIPT_FILENAME'])) !== 'frontend') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo isset($pageTitle) ? $pageTitle . ' - ' : ''; ?>Clothes Shop</title>
+    <title>
+        <?php echo isset($pageTitle) && $pageTitle
+                ? "Molly’s Clothing Line | $pageTitle"
+                : "Molly’s Clothing Line";
+        ?>
+    </title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
