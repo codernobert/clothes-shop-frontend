@@ -133,7 +133,14 @@ if (basename(dirname($_SERVER['SCRIPT_FILENAME'])) !== 'frontend') {
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="<?php echo $basePath; ?>index.php">
+            <?php
+            // Determine home link based on user role
+            $homeLink = $basePath . 'index.php';
+            if (isAuthenticated() && isAdmin()) {
+                $homeLink = $basePath . 'admin/home.php';
+            }
+            ?>
+            <a class="navbar-brand" href="<?php echo $homeLink; ?>">
                 <i class="fas fa-shopping-bag me-2"></i>Clothes Shop
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -142,7 +149,7 @@ if (basename(dirname($_SERVER['SCRIPT_FILENAME'])) !== 'frontend') {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo $basePath; ?>index.php">Home</a>
+                        <a class="nav-link" href="<?php echo $homeLink; ?>">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo $basePath; ?>products.php">Products</a>
@@ -166,29 +173,37 @@ if (basename(dirname($_SERVER['SCRIPT_FILENAME'])) !== 'frontend') {
                     <?php if (isAuthenticated()):
                         $user = getCurrentUser();
                     ?>
-                        <!-- Authenticated User Menu -->
+                        <!-- Authenticated User Menu - Horizontal Layout -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?php echo $basePath; ?>orders.php">
+                                <i class="fas fa-box me-1"></i>My Orders
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo $basePath; ?>cart.php">
                                 <i class="fas fa-shopping-cart me-1"></i>Cart
                                 <span class="cart-badge" id="cartCount">0</span>
                             </a>
                         </li>
+                        <?php if ($user['role'] === 'ADMIN'): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?php echo $basePath; ?>admin/index.php">
+                                <i class="fas fa-user-shield me-1"></i>Admin Panel
+                            </a>
+                        </li>
+                        <?php else: ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?php echo $basePath; ?>admin/index.php">
+                                <i class="fas fa-tachometer-alt me-1"></i>Admin Dashboard
+                            </a>
+                        </li>
+                        <?php endif; ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-user-circle me-1"></i>
                                 <?php echo htmlspecialchars($user['firstName'] ?? 'User'); ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="<?php echo $basePath; ?>orders.php">
-                                    <i class="fas fa-box me-2"></i>My Orders
-                                </a></li>
-                                <?php if ($user['role'] === 'ADMIN'): ?>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="<?php echo $basePath; ?>admin/index.php">
-                                    <i class="fas fa-user-shield me-2"></i>Admin Panel
-                                </a></li>
-                                <?php endif; ?>
-                                <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="<?php echo $basePath; ?>logout.php">
                                     <i class="fas fa-sign-out-alt me-2"></i>Logout
                                 </a></li>
@@ -215,17 +230,64 @@ if (basename(dirname($_SERVER['SCRIPT_FILENAME'])) !== 'frontend') {
     <script>
         const basePath = '<?php echo $basePath; ?>';
 
-        // Update cart count
+        // Update cart count - Make globally accessible
         function updateCartCount() {
+            // Only try to update if user is authenticated (check if cartCount element exists)
+            const badge = document.getElementById('cartCount');
+            if (!badge) {
+                console.log('Cart badge element not found');
+                return;
+            }
+
             fetch(basePath + 'ajax/get_cart_count.php')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.count !== undefined) {
-                        document.getElementById('cartCount').textContent = data.count;
+                .then(response => {
+                    if (!response.ok) {
+                        console.error('Cart count response error:', response.status);
+                        return null;
                     }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.count !== undefined) {
+                        console.log('Cart count updated to:', data.count);
+                        badge.textContent = data.count;
+                        // Show badge only if count > 0
+                        if (data.count > 0) {
+                            badge.style.display = 'inline-block';
+                        } else {
+                            badge.style.display = 'inline-block';
+                        }
+                    } else {
+                        console.error('Invalid cart count response:', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating cart count:', error);
+                    // Show 0 if there's an error
+                    badge.textContent = '0';
                 });
         }
 
+        // Make updateCartCount globally available
+        window.updateCartCount = updateCartCount;
+
         // Update on page load
-        updateCartCount();
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded - updating cart count');
+            updateCartCount();
+        });
+
+        // Also try immediate update
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', updateCartCount);
+        } else {
+            // DOM is already loaded
+            updateCartCount();
+        }
+
+        // Also listen for custom cart update events
+        document.addEventListener('cartUpdated', function() {
+            console.log('cartUpdated event received - updating badge');
+            updateCartCount();
+        });
     </script>

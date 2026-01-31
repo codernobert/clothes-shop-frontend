@@ -5,9 +5,14 @@ require_once 'config.php';
 // Get redirect parameter if present
 $redirect = $_GET['redirect'] ?? 'index.php';
 
-// If already logged in, redirect
+// If already logged in, redirect appropriately
 if (isAuthenticated()) {
-    header('Location: ' . $redirect);
+    // If admin, redirect to admin home; otherwise to specified redirect or home
+    if (isAdmin()) {
+        header('Location: admin/home.php');
+    } else {
+        header('Location: ' . $redirect);
+    }
     exit;
 }
 
@@ -32,7 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($response && isset($response['accessToken'])) {
             // Login successful
             loginUser($response);
-            header('Location: ' . $redirect);
+
+            // Check if user is admin and redirect accordingly
+            if (isAdmin()) {
+                header('Location: admin/home.php');
+            } else {
+                header('Location: ' . $redirect);
+            }
             exit;
         } else {
             $error = 'Invalid email or password';

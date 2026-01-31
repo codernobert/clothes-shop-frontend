@@ -13,6 +13,16 @@ $featuredProducts = array_slice($products ?? [], 0, 8);
 $user = getCurrentUser();
 ?>
 
+<style>
+    .interactive-card {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .interactive-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+    }
+</style>
+
 <div class="hero-section text-center">
     <div class="container">
         <?php if ($user): ?>
@@ -28,104 +38,139 @@ $user = getCurrentUser();
     </div>
 </div>
 
-<!-- Portfolio Demo Section for Interviewers -->
-<div class="bg-light py-5 mb-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <p class="text-muted mb-4">
-                    Explore both the <strong>customer experience</strong> and the <strong>admin dashboard</strong> to see the complete application in action.
-                </p>
-                <div class="card border-primary mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <i class="fas fa-lock me-2"></i>Admin Dashboard Demo Credentials
-                    </div>
-                    <div class="card-body">
-                        <p class="mb-2">
-                            <strong>Email:</strong>
-                            <code class="bg-light p-2 rounded">admin@clothesshop.com</code>
-                        </p>
-                        <p class="mb-3">
-                            <strong>Password:</strong>
-                            <code class="bg-light p-2 rounded">password123</code>
-                        </p>
-                        <p class="text-muted small mb-0">
-                            <i class="fas fa-info-circle me-1"></i>Use these credentials to access the admin panel and explore product management, order management, and dashboard features.
-                        </p>
+<div class="container">
+    <!-- Quick Links Section -->
+    <div class="row mb-5">
+        <div class="col-12 mb-4">
+            <h2 class="text-center fw-bold"><i class="fas fa-bolt text-warning me-2"></i>Quick Links</h2>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="products.php" class="text-decoration-none">
+                <div class="card text-center p-4 h-100 border-0 shadow-sm interactive-card">
+                    <i class="fas fa-shopping-bag fa-3x text-primary mb-3"></i>
+                    <h5>Browse All Products</h5>
+                    <p class="text-muted small">Explore our full collection</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="cart.php" class="text-decoration-none">
+                <div class="card text-center p-4 h-100 border-0 shadow-sm interactive-card">
+                    <i class="fas fa-shopping-cart fa-3x text-success mb-3"></i>
+                    <h5>My Cart</h5>
+                    <p class="text-muted small">Review your items</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="orders.php" class="text-decoration-none">
+                <div class="card text-center p-4 h-100 border-0 shadow-sm interactive-card">
+                    <i class="fas fa-receipt fa-3x text-info mb-3"></i>
+                    <h5>My Orders</h5>
+                    <p class="text-muted small">Track your purchases</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="admin/index.php" class="text-decoration-none">
+                <div class="card text-center p-4 h-100 border-0 shadow-sm interactive-card">
+                    <i class="fas fa-chart-bar fa-3x text-danger mb-3"></i>
+                    <h5>View Admin Demo</h5>
+                    <p class="text-muted small">See admin dashboard</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Portfolio Demo Section for Interviewers -->
+    <div class="bg-light py-5 mb-5 rounded-3 border">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+<!--                    <h2 class="mb-4"><i class="fas fa-briefcase me-2 text-primary"></i>Portfolio Demo</h2>-->
+<!--                    <p class="lead mb-4">This is a full-stack e-commerce application built with PHP, MySQL, and Spring Boot.</p>-->
+                    <p class="text-muted mb-4">
+                        Explore both the <strong>customer experience</strong> and the <strong>admin dashboard</strong> to see the complete application in action.
+                    </p>
+                    <div class="alert alert-info shadow-sm">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Getting Started:</strong> Browse products as a customer, then click "Admin Login" to access the admin panel with demo credentials.
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body text-center">
-                                <i class="fas fa-users fa-2x text-success mb-3"></i>
-                                <h5>Customer Experience</h5>
-                                <p class="text-muted small">Browse products, manage cart, and place orders</p>
-                                <a href="products.php" class="btn btn-success btn-sm">
-                                    <i class="fas fa-shopping-bag me-1"></i>Shop
-                                </a>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-0 shadow-sm h-100 interactive-card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-users fa-2x text-success mb-3"></i>
+                                    <h5>Customer Experience</h5>
+                                    <p class="text-muted small">Browse products, manage cart, and place orders</p>
+                                    <a href="products.php" class="btn btn-success btn-sm">
+                                        <i class="fas fa-shopping-bag me-1"></i>Shop
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-0 shadow-sm h-100 interactive-card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-user-tie fa-2x text-info mb-3"></i>
+                                    <h5>Admin Dashboard</h5>
+                                    <p class="text-muted small">Manage products, orders, and view analytics</p>
+                                    <a href="login.php?redirect=admin/home.php" class="btn btn-info btn-sm">
+                                        <i class="fas fa-sign-in-alt me-1"></i>Admin Login
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body text-center">
-                                <i class="fas fa-user-tie fa-2x text-info mb-3"></i>
-                                <h5>Admin Dashboard</h5>
-                                <p class="text-muted small">Manage products, orders, and view analytics</p>
-                                <a href="login.php?redirect=admin/index.php" class="btn btn-info btn-sm">
-                                    <i class="fas fa-sign-in-alt me-1"></i>Admin Login
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="alert alert-info mt-4 mb-0">
-                    <i class="fas fa-lightbulb me-2"></i>
-                    <strong>Pro Tip:</strong> Login with the demo admin credentials above, then navigate to the admin dashboard to see advanced features!
+<!--                    <div class="alert alert-info mt-4 mb-0 shadow-sm">-->
+<!--                        <i class="fas fa-lightbulb me-2"></i>-->
+<!--                        <strong>Pro Tip:</strong> Login with the demo admin credentials above, then navigate to the admin dashboard to see advanced features!-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="container">
     <!-- Categories Section -->
     <div class="row mb-5">
         <div class="col-12 mb-4">
-            <h2 class="text-center">Shop by Category</h2>
+            <h2 class="text-center fw-bold"><i class="fas fa-th-large text-info me-2"></i>Shop by Category</h2>
         </div>
         <div class="col-md-3 mb-3">
             <a href="products.php?category=TOPS" class="text-decoration-none">
-                <div class="card text-center p-4 h-100 border-0 shadow-sm">
+                <div class="card text-center p-4 h-100 border-0 shadow-sm interactive-card">
                     <i class="fas fa-tshirt fa-3x text-primary mb-3"></i>
                     <h5>Tops</h5>
+                    <p class="text-muted small">T-shirts, Shirts & More</p>
                 </div>
             </a>
         </div>
         <div class="col-md-3 mb-3">
             <a href="products.php?category=BOTTOMS" class="text-decoration-none">
-                <div class="card text-center p-4 h-100 border-0 shadow-sm">
-                    <i class="fas fa-socks fa-3x text-success mb-3"></i>
+                <div class="card text-center p-4 h-100 border-0 shadow-sm interactive-card">
+                    <i class="fas fa-shoe-prints fa-3x text-success mb-3"></i>
                     <h5>Bottoms</h5>
+                    <p class="text-muted small">Jeans, Shorts & Pants</p>
                 </div>
             </a>
         </div>
         <div class="col-md-3 mb-3">
             <a href="products.php?category=DRESSES" class="text-decoration-none">
-                <div class="card text-center p-4 h-100 border-0 shadow-sm">
-                    <i class="fas fa-vest fa-3x text-danger mb-3"></i>
+                <div class="card text-center p-4 h-100 border-0 shadow-sm interactive-card">
+                    <i class="fas fa-person-dress fa-3x text-danger mb-3"></i>
                     <h5>Dresses</h5>
+                    <p class="text-muted small">Casual & Formal</p>
                 </div>
             </a>
         </div>
         <div class="col-md-3 mb-3">
             <a href="products.php?category=OUTERWEAR" class="text-decoration-none">
-                <div class="card text-center p-4 h-100 border-0 shadow-sm">
-                    <i class="fas fa-coat-hanger fa-3x text-warning mb-3"></i>
+                <div class="card text-center p-4 h-100 border-0 shadow-sm interactive-card">
+                    <i class="fas fa-wind fa-3x text-warning mb-3"></i>
                     <h5>Outerwear</h5>
+                    <p class="text-muted small">Jackets & Coats</p>
                 </div>
             </a>
         </div>
@@ -134,7 +179,7 @@ $user = getCurrentUser();
     <!-- Featured Products -->
     <div class="row mb-5">
         <div class="col-12 mb-4">
-            <h2 class="text-center">Featured Products</h2>
+            <h2 class="text-center fw-bold"><i class="fas fa-star text-warning me-2"></i>Featured Products</h2>
         </div>
         <?php if (!empty($featuredProducts)): ?>
             <?php foreach ($featuredProducts as $product): ?>
@@ -168,7 +213,7 @@ $user = getCurrentUser();
             <?php endforeach; ?>
         <?php else: ?>
             <div class="col-12">
-                <div class="alert alert-info text-center">
+                <div class="alert alert-info text-center shadow-sm">
                     <i class="fas fa-info-circle me-2"></i>No products available at the moment.
                 </div>
             </div>
@@ -177,22 +222,25 @@ $user = getCurrentUser();
 
     <!-- Features Section -->
     <div class="row mb-5">
+        <div class="col-12 mb-4">
+            <h2 class="text-center fw-bold"><i class="fas fa-gift text-primary me-2"></i>Why Shop With Us</h2>
+        </div>
         <div class="col-md-4 mb-3">
-            <div class="text-center p-4">
+            <div class="card text-center p-4 border-0 shadow-sm h-100">
                 <i class="fas fa-shipping-fast fa-3x text-primary mb-3"></i>
                 <h5>Fast Delivery</h5>
                 <p class="text-muted">Quick and reliable shipping to your doorstep</p>
             </div>
         </div>
         <div class="col-md-4 mb-3">
-            <div class="text-center p-4">
+            <div class="card text-center p-4 border-0 shadow-sm h-100">
                 <i class="fas fa-lock fa-3x text-success mb-3"></i>
                 <h5>Secure Payment</h5>
                 <p class="text-muted">Multiple payment options with secure transactions</p>
             </div>
         </div>
         <div class="col-md-4 mb-3">
-            <div class="text-center p-4">
+            <div class="card text-center p-4 border-0 shadow-sm h-100">
                 <i class="fas fa-undo fa-3x text-warning mb-3"></i>
                 <h5>Easy Returns</h5>
                 <p class="text-muted">Hassle-free returns within 30 days</p>
