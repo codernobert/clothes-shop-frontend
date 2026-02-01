@@ -44,7 +44,7 @@ $user = getCurrentUser();
         <div class="col-12 mb-4">
             <h2 class="text-center fw-bold"><i class="fas fa-bolt text-warning me-2"></i>Quick Links</h2>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-3">
             <a href="products.php" class="text-decoration-none">
                 <div class="card text-center p-4 h-100 border-0 shadow-sm interactive-card">
                     <i class="fas fa-shopping-bag fa-3x text-primary mb-3"></i>
@@ -53,7 +53,7 @@ $user = getCurrentUser();
                 </div>
             </a>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-3">
             <a href="cart.php" class="text-decoration-none">
                 <div class="card text-center p-4 h-100 border-0 shadow-sm interactive-card">
                     <i class="fas fa-shopping-cart fa-3x text-success mb-3"></i>
@@ -62,7 +62,7 @@ $user = getCurrentUser();
                 </div>
             </a>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-3">
             <a href="orders.php" class="text-decoration-none">
                 <div class="card text-center p-4 h-100 border-0 shadow-sm interactive-card">
                     <i class="fas fa-receipt fa-3x text-info mb-3"></i>
@@ -71,67 +71,8 @@ $user = getCurrentUser();
                 </div>
             </a>
         </div>
-        <div class="col-md-3 mb-3">
-            <a href="admin/index.php" class="text-decoration-none">
-                <div class="card text-center p-4 h-100 border-0 shadow-sm interactive-card">
-                    <i class="fas fa-chart-bar fa-3x text-danger mb-3"></i>
-                    <h5>View Admin Demo</h5>
-                    <p class="text-muted small">See admin dashboard</p>
-                </div>
-            </a>
-        </div>
     </div>
 
-    <!-- Portfolio Demo Section for Interviewers -->
-    <div class="bg-light py-5 mb-5 rounded-3 border">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 mb-4 mb-lg-0">
-<!--                    <h2 class="mb-4"><i class="fas fa-briefcase me-2 text-primary"></i>Portfolio Demo</h2>-->
-<!--                    <p class="lead mb-4">This is a full-stack e-commerce application built with PHP, MySQL, and Spring Boot.</p>-->
-                    <p class="text-muted mb-4">
-                        Explore both the <strong>customer experience</strong> and the <strong>admin dashboard</strong> to see the complete application in action.
-                    </p>
-                    <div class="alert alert-info shadow-sm">
-                        <i class="fas fa-lightbulb me-2"></i>
-                        <strong>Getting Started:</strong> Browse products as a customer, then click "Admin Login" to access the admin panel with demo credentials.
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="card border-0 shadow-sm h-100 interactive-card">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-users fa-2x text-success mb-3"></i>
-                                    <h5>Customer Experience</h5>
-                                    <p class="text-muted small">Browse products, manage cart, and place orders</p>
-                                    <a href="products.php" class="btn btn-success btn-sm">
-                                        <i class="fas fa-shopping-bag me-1"></i>Shop
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="card border-0 shadow-sm h-100 interactive-card">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-user-tie fa-2x text-info mb-3"></i>
-                                    <h5>Admin Dashboard</h5>
-                                    <p class="text-muted small">Manage products, orders, and view analytics</p>
-                                    <a href="login.php?redirect=admin/home.php" class="btn btn-info btn-sm">
-                                        <i class="fas fa-sign-in-alt me-1"></i>Admin Login
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-<!--                    <div class="alert alert-info mt-4 mb-0 shadow-sm">-->
-<!--                        <i class="fas fa-lightbulb me-2"></i>-->
-<!--                        <strong>Pro Tip:</strong> Login with the demo admin credentials above, then navigate to the admin dashboard to see advanced features!-->
-<!--                    </div>-->
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Categories Section -->
     <div class="row mb-5">
