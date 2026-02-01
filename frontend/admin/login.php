@@ -3,7 +3,7 @@ session_start();
 require_once '../config.php';
 
 // Get redirect parameter if present
-$redirect = $_GET['redirect'] ?? 'admin/home.php';
+$redirect = $_GET['redirect'] ?? 'home.php';
 
 // If already logged in as admin, redirect to admin dashboard
 if (isAuthenticated() && isAdmin()) {
@@ -23,7 +23,7 @@ $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
-    $redirect = $_POST['redirect'] ?? 'admin/home.php';
+    $redirect = $_POST['redirect'] ?? 'home.php';
 
     if (empty($email) || empty($password)) {
         $error = 'Please enter both email and password';
