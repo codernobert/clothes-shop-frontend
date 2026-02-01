@@ -139,10 +139,16 @@ if (basename(dirname($_SERVER['SCRIPT_FILENAME'])) !== 'frontend') {
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <?php
-            // Determine home link based on user role
-            $homeLink = $basePath . 'index.php';
+            // Determine home link based on user role and current directory
             if (isAuthenticated() && isAdmin()) {
-                $homeLink = $basePath . 'admin/home.php';
+                // If in admin directory, use relative path to admin/home.php
+                if ($basePath === '../') {
+                    $homeLink = 'home.php';
+                } else {
+                    $homeLink = $basePath . 'admin/home.php';
+                }
+            } else {
+                $homeLink = $basePath . 'index.php';
             }
             ?>
             <a class="navbar-brand" href="<?php echo $homeLink; ?>">
