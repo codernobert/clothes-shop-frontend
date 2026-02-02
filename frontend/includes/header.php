@@ -29,16 +29,24 @@ if (basename(dirname($_SERVER['SCRIPT_FILENAME'])) !== 'frontend') {
             --primary-color: #2c3e50;
             --secondary-color: #e74c3c;
             --accent-color: #3498db;
+            --navbar-height: 60px;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
+            padding-top: var(--navbar-height);
         }
 
         .navbar {
             background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1000;
         }
 
         .navbar-brand {
@@ -109,6 +117,9 @@ if (basename(dirname($_SERVER['SCRIPT_FILENAME'])) !== 'frontend') {
             color: white;
             margin-top: 50px;
             padding: 30px 0;
+            clear: both;
+            position: relative;
+            z-index: 1;
         }
 
         .filter-section {

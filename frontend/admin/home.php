@@ -63,7 +63,7 @@ $user = getCurrentUser();
             </a>
         </div>
         <div class="col-md-3 mb-3">
-            <a href="index.php" class="text-decoration-none">
+            <a href="analytics.php" class="text-decoration-none">
                 <div class="card text-center p-4 h-100 border-0 shadow-sm">
                     <i class="fas fa-chart-bar fa-3x text-warning mb-3"></i>
                     <h5>Dashboard</h5>
