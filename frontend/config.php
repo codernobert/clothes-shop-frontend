@@ -135,6 +135,6 @@ function logoutUser() {
 
 // Format currency
 function formatCurrency($amount) {
-    return '$' . number_format($amount, 2);
+    return 'Ksh' . number_format($amount, 2);
 }
 ?>
