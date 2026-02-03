@@ -770,10 +770,16 @@ $paymentsData = $payments['data'] ?? [];
         new Chart(orderStatusCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Delivered', 'Processing', 'Pending', 'Cancelled'],
+                labels: ['Delivered', 'Processing', 'Pending', 'Confirmed', 'Cancelled'],
                 datasets: [{
-                    data: [150, 60, 25, 10],
-                    backgroundColor: ['#48bb78', '#667eea', '#ed8936', '#f56565']
+                    data: [
+                        <?php echo $ordersData['deliveredOrders'] ?? 0; ?>,
+                        <?php echo $ordersData['processingOrders'] ?? 0; ?>,
+                        <?php echo $ordersData['pendingOrders'] ?? 0; ?>,
+                        <?php echo $ordersData['confirmedOrders'] ?? 0; ?>,
+                        <?php echo $ordersData['cancelledOrders'] ?? 0; ?>
+                    ],
+                    backgroundColor: ['#48bb78', '#667eea', '#ed8936', '#3182ce', '#f56565']
                 }]
             },
             options: {
@@ -787,13 +793,23 @@ $paymentsData = $payments['data'] ?? [];
     // Top Products Chart
     const topProductsCtx = document.getElementById('topProductsChart');
     if (topProductsCtx) {
+        const topSellingProducts = <?php
+            $topProducts = array_slice($productsData['topSellingProducts'] ?? [], 0, 5);
+            $productLabels = array_map(function($p) { return $p['productName'] ?? 'N/A'; }, $topProducts);
+            $productSales = array_map(function($p) { return $p['unitsSold'] ?? 0; }, $topProducts);
+            echo json_encode([
+                'labels' => $productLabels,
+                'data' => $productSales
+            ]);
+        ?>;
+
         new Chart(topProductsCtx, {
             type: 'bar',
             data: {
-                labels: ['T-Shirt', 'Jeans', 'Jacket', 'Shoes', 'Shorts'],
+                labels: topSellingProducts.labels.length > 0 ? topSellingProducts.labels : ['No data'],
                 datasets: [{
                     label: 'Units Sold',
-                    data: [450, 320, 250, 180, 150],
+                    data: topSellingProducts.data.length > 0 ? topSellingProducts.data : [0],
                     backgroundColor: '#667eea'
                 }]
             },
