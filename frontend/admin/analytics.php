@@ -705,7 +705,9 @@ $paymentsData = $payments['data'] ?? [];
                                         <i class="fas fa-chart-line fa-3x mb-3" style="color: #667eea;"></i>
                                         <h5>Revenue Report</h5>
                                         <p class="text-muted small">Download revenue analysis</p>
-                                        <button class="btn btn-sm btn-primary"><i class="fas fa-download"></i> Download</button>
+                                        <a href="ajax/download_report.php?type=revenue" class="btn btn-sm btn-primary" download>
+                                            <i class="fas fa-download"></i> Download CSV
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -715,7 +717,9 @@ $paymentsData = $payments['data'] ?? [];
                                         <i class="fas fa-shopping-cart fa-3x mb-3" style="color: #48bb78;"></i>
                                         <h5>Orders Report</h5>
                                         <p class="text-muted small">Download order details</p>
-                                        <button class="btn btn-sm btn-success"><i class="fas fa-download"></i> Download</button>
+                                        <a href="ajax/download_report.php?type=orders" class="btn btn-sm btn-success" download>
+                                            <i class="fas fa-download"></i> Download CSV
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -725,7 +729,9 @@ $paymentsData = $payments['data'] ?? [];
                                         <i class="fas fa-users fa-3x mb-3" style="color: #ed8936;"></i>
                                         <h5>Customers Report</h5>
                                         <p class="text-muted small">Download customer insights</p>
-                                        <button class="btn btn-sm btn-warning"><i class="fas fa-download"></i> Download</button>
+                                        <a href="ajax/download_report.php?type=customers" class="btn btn-sm btn-warning" download>
+                                            <i class="fas fa-download"></i> Download CSV
+                                        </a>
                                     </div>
                                 </div>
                             </div>

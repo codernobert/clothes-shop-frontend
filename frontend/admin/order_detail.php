@@ -8,6 +8,21 @@ requireAdminAuth();
 $pageTitle = 'Order Details';
 include '../includes/header.php';
 
+/**
+ * Format payment method for display
+ * Handles both old values (PAYSTACK, MPESA) and new values (Card, M-Pesa)
+ */
+function formatPaymentMethod($method) {
+    $methodMap = [
+        'PAYSTACK' => 'Card',
+        'Card' => 'Card',
+        'MPESA' => 'M-Pesa',
+        'M-Pesa' => 'M-Pesa'
+    ];
+
+    return $methodMap[$method] ?? htmlspecialchars($method);
+}
+
 // Get order ID from query parameter
 $orderId = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
@@ -214,7 +229,7 @@ if (!$order || !is_array($order) || empty($order['id']) || isset($order['error']
                 </div>
                 <div class="card-body">
                     <p class="text-muted mb-0">
-                        <?php echo htmlspecialchars($order['paymentMethod'] ?? 'Not specified'); ?>
+                        <?php echo formatPaymentMethod($order['paymentMethod'] ?? 'Not specified'); ?>
                     </p>
                 </div>
             </div>

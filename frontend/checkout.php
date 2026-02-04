@@ -70,14 +70,14 @@ if (!$cart || empty($cart['items'])) {
                         <div class="mb-3">
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="radio" name="paymentMethod"
-                                       id="paystack" value="PAYSTACK" checked>
+                                       id="paystack" value="Card" checked>
                                 <label class="form-check-label" for="paystack">
-                                    <i class="fas fa-credit-card me-2"></i>Paystack (Card Payment)
+                                    <i class="fas fa-credit-card me-2"></i>Card Payment
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="paymentMethod"
-                                       id="mpesa" value="MPESA">
+                                       id="mpesa" value="M-Pesa">
                                 <label class="form-check-label" for="mpesa">
                                     <i class="fas fa-mobile-alt me-2"></i>M-Pesa
                                 </label>

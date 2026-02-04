@@ -10,6 +10,21 @@ include 'includes/header.php';
 
 $userId = getUserId();
 $orders = makeApiRequest('/orders/user/' . $userId, 'GET', null, true);
+
+/**
+ * Format payment method for display
+ * Handles both old values (PAYSTACK, MPESA) and new values (Card, M-Pesa)
+ */
+function formatPaymentMethod($method) {
+    $methodMap = [
+        'PAYSTACK' => 'Card',
+        'Card' => 'Card',
+        'MPESA' => 'M-Pesa',
+        'M-Pesa' => 'M-Pesa'
+    ];
+
+    return $methodMap[$method] ?? htmlspecialchars($method);
+}
 ?>
 
 <div class="container mt-4">
@@ -61,7 +76,7 @@ $orders = makeApiRequest('/orders/user/' . $userId, 'GET', null, true);
                         </div>
                         <div class="col-md-6">
                             <h6>Payment Method:</h6>
-                            <p class="text-muted mb-0"><?php echo htmlspecialchars($order['paymentMethod']); ?></p>
+                            <p class="text-muted mb-0"><?php echo formatPaymentMethod($order['paymentMethod']); ?></p>
                         </div>
                     </div>
 
