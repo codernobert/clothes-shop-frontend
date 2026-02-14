@@ -298,6 +298,12 @@ POST   /api/admin/orders/{id}/cancel - Cancel order
 
 ---
 
+## License
 
----
+MIT License
+
+## Contact
+
+For questions or support, please open an issue in the repository  
+or reach me at: norbertokoth01@gmail.com
 
